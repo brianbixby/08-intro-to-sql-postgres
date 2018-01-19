@@ -1,28 +1,35 @@
 'use strict';
-
+// FILE SYSTEM THIS ALLOWS NODE TO INTERACT WITH LOCAL FILES BECAUSE I HAVE DB RUNNING ON MY MACHINE
 const fs = require('fs');
+// EXPRESS SERVER SIDE JAVASCRIPT
 const express = require('express');
-
+// POSTGRES DBMS - database management system
+const pg = require('pg');
+// BODYPARSERallows us to parse request body of incoming requests for us to post our api. good for posts and put. middleware that interacts of the middle of the requests manipulates request object then sends it to the server
 const bodyParser = require('body-parser');
+// WHERE WE RUN OUR SERVER
 const PORT = process.env.PORT || 3000;
 const app = express();
-
-const client = new pg.Client();
-
+// DEFAULT DATABASE PORT
+const conString = 'postgres://localhost:5432';
+// ALLOWS USER TO READ AND WRITE TO DB
+const client = new pg.Client(conString);
 // REVIEW: Use the client object to connect to our DB.
 client.connect();
 
-
 // REVIEW: Install the middleware plugins so that our app can use the body-parser module.
+// basically tells the system that you want json to be used.
 app.use(bodyParser.json());
+// my research shows me that if extended: true, then you can parse nested objects, or generally any type. However, if you set extended: false, then you can only parse strings or arrays.
 app.use(bodyParser.urlencoded({extended: true}));
+// Our client facing files are now in public so we can tell express to serve those static files in that directory.
 app.use(express.static('./public'));
 
 
 // REVIEW: Routes for requesting HTML resources
 app.get('/new', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // All of the full-stack diagram corresponds with this route and get request. When the user goes to the /new page from thie computer they are making a request to a server that then queries a database, the database sends the result to the server which in turn send the response to the client which then renders the page because of the client side javascript in this project. This is the read in crud.
   response.sendFile('new.html', {root: './public'});
 });
 
@@ -30,7 +37,7 @@ app.get('/new', (request, response) => {
 // REVIEW: Routes for making API calls to use CRUD Operations on our database
 app.get('/articles', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // All of the full-stack diagram corresponds with this route and get request. When a user goes to the /articles page they are making a request to a server, the server then queries the database for all entries within the articles table. This result is sent to the server which in turn is relayed to the client. The client side javascript in this project then renders the articles. This is the read in crud.
   client.query('SELECT * FROM articles')
     .then(function(result) {
       response.send(result.rows);
@@ -42,7 +49,7 @@ app.get('/articles', (request, response) => {
 
 app.post('/articles', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // All of the full stack diagram corresponds with this, when the user makes a post they are sending a request with a body to the server the server then queries the database to see if it can post a new article, the db sends the result (success or fail) to the server, which relays the response to the client. From here there is client side javascript that should give a success or fail message and redirect the user to a new page. This is the create portion of crud
   client.query(
     `INSERT INTO
     articles(title, author, "authorUrl", category, "publishedOn", body)
@@ -67,7 +74,7 @@ app.post('/articles', (request, response) => {
 
 app.put('/articles/:id', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // The entire full stack diagram again corresponds with this route, a user is updating an individual article this sends a request to the server which in turn queries the database to see if it can update an article, from here the database the result (success or fail) back to the server, which relays it to the client and client side javascript will be enacted based on the response the server gives it. This is the update portion of crud
   client.query(
     `UPDATE articles
     SET
@@ -94,7 +101,7 @@ app.put('/articles/:id', (request, response) => {
 
 app.delete('/articles/:id', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // All of the fullstack diagram again corresponds with this route. The user sends a request to the server to delete an article the server queries a database the database then sends a result back to the server and the server sends a response to the client and based on the response from the server certain client side javascript will be executed changing the user's view. This is the delete in crud.
   client.query(
     `DELETE FROM articles WHERE article_id=$1;`,
     [request.params.id]
@@ -109,7 +116,7 @@ app.delete('/articles/:id', (request, response) => {
 
 app.delete('/articles', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // The entire fullstack diagram corresponds with this route. The user sends a request to the server the server then queries the database and the database sends a result back to the server whick then sends a response to the client and client side javascript is executed based on this response changing the ui view. This is the delete in crud.
   client.query(
     'DELETE FROM articles;'
   )
@@ -122,7 +129,7 @@ app.delete('/articles', (request, response) => {
 });
 
 // COMMENT: What is this function invocation doing?
-// PUT YOUR RESPONSE HERE
+// theloadbd call is hoisting the load db function. The function queries the database for a table of users if the user table does not exist it will create one with the fields and data-types specified in the query. Then it calls the loadArticles function which queries a count from the database and if there is nothing in the databse it loads our json file into the databse.
 loadDB();
 
 app.listen(PORT, () => {
@@ -134,7 +141,7 @@ app.listen(PORT, () => {
 ////////////////////////////////////////
 function loadArticles() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // All of the full stack diagram corresponds with this function. The user goes to a page and theclient makes a request to the server which then queries a count from the articles table of the database then the database then sends a result back to the server the server sends the response to the client, the client then enacts client side javascript and changes the ui. Thi is a read in crud.
   client.query('SELECT COUNT(*) FROM articles')
     .then(result => {
     // REVIEW: result.rows is an array of objects that PostgreSQL returns as a response to a query.
@@ -158,7 +165,7 @@ function loadArticles() {
 
 function loadDB() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // All of the fullstack diagram correspond.The client sends a request to the server which then sends the query below to the database and the database sends a result back to the server which sends a response to the client which executes client side javascript based on the response it gets, changing the ui of the page. This is the read in crud. 
   client.query(`
     CREATE TABLE IF NOT EXISTS articles (
       article_id SERIAL PRIMARY KEY,

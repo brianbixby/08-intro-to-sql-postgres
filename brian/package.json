@@ -10,8 +10,9 @@
   "author": "Code Fellows",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.17.1",
     "express": "^4.13.3",
-    "body-parser": "^1.17.1"
+    "pg": "^7.4.1"
   },
   "keywords": []
 }
