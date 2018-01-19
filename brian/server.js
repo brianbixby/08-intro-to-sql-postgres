@@ -11,7 +11,7 @@ const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3000;
 const app = express();
 // DEFAULT DATABASE PORT
-const conString = 'postgres://localhost:5432';
+const conString = 'postgres://localhost:5432/kilovolt';
 // ALLOWS USER TO READ AND WRITE TO DB
 const client = new pg.Client(conString);
 // REVIEW: Use the client object to connect to our DB.
@@ -165,7 +165,7 @@ function loadArticles() {
 
 function loadDB() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // All of the fullstack diagram correspond.The client sends a request to the server which then sends the query below to the database and the database sends a result back to the server which sends a response to the client which executes client side javascript based on the response it gets, changing the ui of the page. This is the read in crud. 
+  // All of the fullstack diagram correspond.The client sends a request to the server which then sends the query below to the database and the database sends a result back to the server which sends a response to the client which executes client side javascript based on the response it gets, changing the ui of the page. This is the read in crud.
   client.query(`
     CREATE TABLE IF NOT EXISTS articles (
       article_id SERIAL PRIMARY KEY,
