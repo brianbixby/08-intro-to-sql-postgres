@@ -73,29 +73,31 @@ _Your repository must include:_
   - As applicable, an additional sentence or two of explanation about what the code is doing, what NPM packages are involved, etc. The goal is to demonstrate that you understand what is going on in the code without glossing over details, but also without writing a novel about it.
 
 ## Documentation
-_Your README.md must include:_
+# 08-intro-to-sql-postgres
 
-```md
-# Project Name
-
-**Author**: Your Name Goes Here
-**Version**: 1.0.0 (increment the patch/fix version number up if you make more commits past your first submission)
+**Author**: Brian Bixby
+**Version**: 1.0.0
 
 ## Overview
-<!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for a Code Fellows 301 class. (i.e. What's your problem domain?) -->
+This assignment was an introduction to crud and working with a local dbms through express and other NPM modules.
 
 ## Getting Started
-<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
+Project setup (more for me than you, pretty detailed)
+    The first thing I did was a npm init -y inside of the starter code folder. This creates a package.json with meta data about my project. Next I did a (npm i -S), this saves all of the project's dependencies to the package.json. Next I created a gitignore at the root of the repo itself so node and environment modules dont get uploaded to github. Next I created a new branch and duplicated the start-code in a new folder, then I did a git init and a initial commit up to my github repo.
+From Here a user needs to npm i -S pg (postgres) and require it in the server.js, then create a connection string and update the client constant. Then remove the line of code exporting the json.
 
 ## Architecture
-<!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
+For this project I utilized Github, Node and the following NPM node modules
+    - Express
+    - Postgres
+    - Body parser
+    - File system
 
 ## Change Log
-<!-- Use this are to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:
-
-01-01-2001 4:59pm - Application now has a fully-functional express server, with GET and POST routes for the book resource.
+01-19-2018 9:30am - Initial commit with my project setup above done including installing dependencies and a .gitignore 
+01-19-2018 11:50am - finished all comments on server.js and removed line of code exporting json.
+01-19-2018 12:00am - Updated comments with npm modules used
 
 ## Credits and Collaborations
-<!-- Give credit (and a link) to other people or resources that helped you build this application. -->
--->
-```
+Codefellows https://github.com/codefellows-seattle-301d29 
+Isaac and Kat for answering my many questions
