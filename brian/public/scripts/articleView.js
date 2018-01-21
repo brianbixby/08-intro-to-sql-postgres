@@ -103,7 +103,6 @@ articleView.create = () => {
     hljs.highlightBlock(block);
   });
 
-  $('#export-field').show();
 };
 
 articleView.submit = event => {
